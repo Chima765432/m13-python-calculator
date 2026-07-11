@@ -1,10 +1,9 @@
 # Calculation and User Model API
 
-A FastAPI project data layer. Module 10 added a SQLAlchemy User model with
-bcrypt password hashing and Pydantic validation. Module 11 adds a Calculation
-model with a factory for the operation logic and schemas that validate input
-before it reaches the database. There are no routes yet; endpoints arrive in
-the next module.
+The data layer of a FastAPI calculator API: a User model with bcrypt password
+hashing, a Calculation model with a factory for the operation logic, and
+Pydantic schemas that validate input before it reaches the database. There
+are no HTTP routes yet; this is the foundation the endpoints get built on.
 
 ## What is here
 
