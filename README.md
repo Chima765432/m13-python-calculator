@@ -33,8 +33,8 @@ database and prove the uniqueness constraints reject duplicates.
 Every push runs the full suite in GitHub Actions against a PostgreSQL service
 container. If tests pass on main, the image is built and pushed to Docker Hub:
 
-https://hub.docker.com/r/chima765432/m10-python-calculator
+https://hub.docker.com/r/chima765432/m11-python-calculator
 
 Pull it with:
 
-    docker pull chima765432/m10-python-calculator:latest
+    docker pull chima765432/m11-python-calculator:latest
