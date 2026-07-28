@@ -37,8 +37,8 @@ link, and that deleting a user cascades to their calculations.
 Every push runs the suite in GitHub Actions against a PostgreSQL service
 container. If tests pass on main, the image is built and pushed to Docker Hub:
 
-https://hub.docker.com/r/chima765432/m11-python-calculator
+https://hub.docker.com/r/chima765432/m12-python-calculator
 
 Pull it with:
 
-    docker pull chima765432/m11-python-calculator:latest
+    docker pull chima765432/m12-python-calculator:latest
