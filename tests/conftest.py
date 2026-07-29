@@ -30,3 +30,30 @@ def client(db_session):
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(scope="session")
+def live_server():
+    import socket
+    import subprocess
+    import time
+
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
+
+    process = subprocess.Popen(
+        ["uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8001"]
+    )
+    for _ in range(40):
+        try:
+            with socket.create_connection(("127.0.0.1", 8001), timeout=0.5):
+                break
+        except OSError:
+            time.sleep(0.5)
+    else:
+        process.terminate()
+        raise RuntimeError("server did not start")
+
+    yield "http://127.0.0.1:8001"
+    process.terminate()
+    process.wait()
