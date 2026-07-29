@@ -17,12 +17,12 @@ Base.metadata.create_all(bind=engine)
 
 @app.get("/register")
 def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse(request, "register.html")
 
 
 @app.get("/login")
 def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse(request, "login.html")
 
 
 @app.post("/users/register", response_model=UserToken, status_code=201)
