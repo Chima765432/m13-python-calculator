@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <form id="login-form">
+    <input id="email" name="email" placeholder="email">
+    <input id="password" name="password" type="password" placeholder="password">
+    <button id="submit" type="submit">Log in</button>
+  </form>
+  <p id="error"></p>
+  <p id="success"></p>
+  <p><a href="/register">Need an account? Register</a></p>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const error = document.getElementById("error");
+    const success = document.getElementById("success");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      error.textContent = "";
+      success.textContent = "";
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        error.textContent = "Enter a valid email address";
+        return;
+      }
+      if (password.length < 8) {
+        error.textContent = "Password must be at least 8 characters";
+        return;
+      }
+
+      const response = await fetch("/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("access_token", data.access_token);
+        success.textContent = "Login successful";
+      } else {
+        error.textContent = "Invalid credentials";
+      }
+    });
+  </script>
+</body>
+</html>

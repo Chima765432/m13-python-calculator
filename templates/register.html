@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Register</title>
+</head>
+<body>
+  <h1>Register</h1>
+  <form id="register-form">
+    <input id="username" name="username" placeholder="username">
+    <input id="email" name="email" placeholder="email">
+    <input id="password" name="password" type="password" placeholder="password">
+    <input id="confirm" name="confirm" type="password" placeholder="confirm password">
+    <button id="submit" type="submit">Register</button>
+  </form>
+  <p id="error"></p>
+  <p id="success"></p>
+  <p><a href="/login">Already registered? Log in</a></p>
+
+  <script>
+    const form = document.getElementById("register-form");
+    const error = document.getElementById("error");
+    const success = document.getElementById("success");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      error.textContent = "";
+      success.textContent = "";
+
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+        error.textContent = "Enter a valid email address";
+        return;
+      }
+      if (password.length < 8) {
+        error.textContent = "Password must be at least 8 characters";
+        return;
+      }
+      if (password !== confirm) {
+        error.textContent = "Passwords do not match";
+        return;
+      }
+
+      const response = await fetch("/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("access_token", data.access_token);
+        success.textContent = "Registration successful";
+      } else {
+        const data = await response.json();
+        error.textContent = data.detail || "Registration failed";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,4 +1,5 @@
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app.database import Base, engine, get_db
@@ -9,8 +10,19 @@ from app.auth import create_access_token
 from app.schemas.user import UserCreate, UserLogin, UserRead, UserToken
 
 app = FastAPI(title="Calculations API")
+templates = Jinja2Templates(directory="templates")
 
 Base.metadata.create_all(bind=engine)
+
+
+@app.get("/register")
+def register_page(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+
+@app.get("/login")
+def login_page(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
 
 
 @app.post("/users/register", response_model=UserToken, status_code=201)
