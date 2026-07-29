@@ -38,3 +38,17 @@ def test_login_rejects_wrong_password(client):
         "/users/login", json={"email": "alice@example.com", "password": "wrongpassword"}
     )
     assert response.status_code == 401
+
+
+def test_register_returns_token(client):
+    body = client.post("/users/register", json=register_payload()).json()
+    assert body["token_type"] == "bearer"
+    assert len(body["access_token"]) > 20
+
+
+def test_login_returns_token(client):
+    client.post("/users/register", json=register_payload())
+    body = client.post(
+        "/users/login", json={"email": "alice@example.com", "password": "longenough1"}
+    ).json()
+    assert body["access_token"]

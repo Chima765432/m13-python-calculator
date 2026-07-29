@@ -5,14 +5,15 @@ from app.database import Base, engine, get_db
 from app.models.calculation import Calculation
 from app.models.user import User
 from app.schemas.calculation import CalculationCreate, CalculationRead
-from app.schemas.user import UserCreate, UserLogin, UserRead
+from app.auth import create_access_token
+from app.schemas.user import UserCreate, UserLogin, UserRead, UserToken
 
 app = FastAPI(title="Calculations API")
 
 Base.metadata.create_all(bind=engine)
 
 
-@app.post("/users/register", response_model=UserRead, status_code=201)
+@app.post("/users/register", response_model=UserToken, status_code=201)
 def register(payload: UserCreate, db: Session = Depends(get_db)):
     existing = (
         db.query(User)
@@ -29,15 +30,29 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     db.add(user)
     db.commit()
     db.refresh(user)
-    return user
+    token = create_access_token(user.email)
+    return UserToken(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        created_at=user.created_at,
+        access_token=token,
+    )
 
 
-@app.post("/users/login", response_model=UserRead)
+@app.post("/users/login", response_model=UserToken)
 def login(payload: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
     if user is None or not user.verify_password(payload.password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return user
+    token = create_access_token(user.email)
+    return UserToken(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        created_at=user.created_at,
+        access_token=token,
+    )
 
 
 @app.get("/calculations", response_model=list[CalculationRead])

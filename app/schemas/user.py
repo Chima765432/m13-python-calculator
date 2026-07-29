@@ -21,3 +21,8 @@ class UserRead(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+
+class UserToken(UserRead):
+    access_token: str
+    token_type: str = "bearer"
