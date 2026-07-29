@@ -44,6 +44,6 @@ update, delete cycle for calculations including 404 and 422 cases.
 Every push runs the suite in GitHub Actions against a PostgreSQL service
 container. If tests pass on main, the image is built and pushed to Docker Hub:
 
-https://hub.docker.com/r/chima765432/m12-python-calculator
+https://hub.docker.com/r/chima765432/m13-python-calculator
 
-    docker pull chima765432/m12-python-calculator:latest
+    docker pull chima765432/m13-python-calculator:latest
